@@ -1,0 +1,64 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: heketi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: heketi
+    spec:
+      containers:
+      - env:
+        - name: HEKETI_EXECUTOR
+          value: ssh
+        - name: HEKETI_DB_PATH
+          value: /var/lib/heketi/heketi.db
+        - name: HEKETI_FSTAB
+          value: /var/lib/heketi/fstab
+        - name: HEKETI_SNAPSHOT_LIMIT
+          value: "14"
+        - name: HEKETI_KUBE_GLUSTER_DAEMONSET
+          value: "y"
+        image: xiaotech/heketi:7
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /hello
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 30
+          timeoutSeconds: 3
+        name: heketi
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /hello
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 3
+          timeoutSeconds: 3
+        volumeMounts:
+        - mountPath: /var/lib/heketi
+          name: db
+        - mountPath: /etc/ssh_key
+          name: key
+        - mountPath: /etc/heketi/
+          name: config
+      nodeSelector:
+        kubernetes.io/hostname: master-192
+      serviceAccount: heketi-service-account
+      serviceAccountName: heketi-service-account
+      volumes:
+      - emptyDir: {}
+        name: db
+      - hostPath:
+          path: /etc/heketi/
+        name: key
+      - configMap:
+          name: heketi-config
+        name: config

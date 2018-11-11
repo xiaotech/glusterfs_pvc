@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: heketi
+  name: heketi
+  namespace: default
+spec:
+  selector:
+    app: heketi
+  ports:
+    - port: 8080
+  type: NodePort

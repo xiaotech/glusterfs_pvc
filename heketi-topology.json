@@ -1,0 +1,40 @@
+{
+  "clusters": [
+    {
+      "nodes": [
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "172.30.81.192"
+              ],
+              "storage": [
+                "172.30.81.192"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/vdb"
+          ]
+        },
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "172.30.81.193"
+              ],
+              "storage": [
+                "172.30.81.193"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/vdb"
+          ]
+        }
+      ]
+    }
+  ]
+}
